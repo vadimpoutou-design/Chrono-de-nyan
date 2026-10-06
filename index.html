@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chrono de nyyyancat ^^ </title>
+    Avoue il es INCROYABLE mon chrono ? ( sa ma pris 1H A LAIDE !!! )
+    <link rel="icon" type="image/png" href="https://cdn.discordapp.com/attachments/1005106755488976927/1557171022967345152/image.png?backend=b2&ex=6ac6d406&is=6ac58286&hm=0d869ca6006889aad0f0f5760c22aad782ac82df286099d8be43937ad3a96e34&">
+    <style>
+        body {
+            font-family: monospace;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-image: url('https://media.discordapp.net/attachments/1005106755488976927/1557163177081438250/Capture_decran_2026-10-07_004757.png?backend=b2&ex=6ac6ccb8&is=6ac57b38&hm=43c65d71683e096d2647c69547e05428783526a5550e250033feea3ff85371f8&=&format=webp&quality=lossless');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
+
+        .watermark {
+            position: absolute;
+            top: 40px;
+            left: 40px;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            font-size: 2.2rem;
+            color: #000000;
+            text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.7);
+            pointer-events: none;
+        }
+
+        .chrono-container {
+            text-align: center;
+            background: transparent;
+        }
+        
+        #display {
+            font-size: 4rem;
+            margin-bottom: 30px;
+            font-weight: bold;
+            color: #000000;
+            text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.7);
+        }
+
+        button {
+            padding: 12px 24px;
+            font-size: 1.1rem;
+            margin: 0 5px;
+            cursor: pointer;
+            font-weight: bold;
+            font-family: monospace;
+            transition: all 0.2s;
+            background-color: #ffffff;
+            border: 2px solid #000000;
+            border-radius: 0;
+            color: #000000;
+        }
+
+        button:hover {
+            background-color: #87ffad;
+            color: #000000;
+            border-color: #000000;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="watermark">made by nyyyancat ;3</div>
+
+    <div class="chrono-container">
+        <div id="display">00:00:00:00</div>
+        <div>
+            <button id="startBtn" onclick="startChrono()">START</button>
+            <button id="stopBtn" onclick="stopChrono()">STOP</button>
+            <button id="resetBtn" onclick="resetChrono()">RESET</button>
+        </div>
+    </div>
+
+    <script>
+        let startTime = 0;
+        let elapsedTime = 0;
+        let timerInterval = null;
+        let isRunning = false;
+
+        function formatTime(ms) {
+            let totalSeconds = Math.floor(ms / 1000);
+            let hours = Math.floor(totalSeconds / 3600);
+            let minutes = Math.floor((totalSeconds % 3600) / 60);
+            let seconds = totalSeconds % 60;
+            let milliseconds = Math.floor((ms % 1000) / 10);
+
+            let formatted = (
+                String(hours).padStart(2, '0') + ":" +
+                String(minutes).padStart(2, '0') + ":" +
+                String(seconds).padStart(2, '0') + ":" +
+                String(milliseconds).padStart(2, '0')
+            );
+
+            // Met à jour le titre de l'onglet avec le chrono en direct et ton message perso
+            document.title = formatted + " - Chrono de nyyyancat";
+
+            return formatted;
+        }
+
+        function startChrono() {
+            if (!isRunning) {
+                startTime = Date.now() - elapsedTime;
+                timerInterval = setInterval(() => {
+                    elapsedTime = Date.now() - startTime;
+                    document.getElementById("display").textContent = formatTime(elapsedTime);
+                }, 10);
+                isRunning = true;
+            }
+        }
+
+        function stopChrono() {
+            if (isRunning) {
+                clearInterval(timerInterval);
+                isRunning = false;
+            }
+        }
+
+        function resetChrono() {
+            stopChrono();
+            elapsedTime = 0;
+            document.getElementById("display").textContent = "00:00:00:00";
+            document.title = "00:00:00:00 - Chrono de nyyyancat";
+        }
+    </script>
+
+</body>
+</html>
