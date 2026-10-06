@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chrono de nyyyancat ^^ </title>
-    Avoue il es INCROYABLE mon chrono ? ( sa ma pris 1H A LAIDE !!! )
+    <title>00:00:00:00 - Chrono de nyyyancat ^^</title>
     <link rel="icon" type="image/png" href="https://cdn.discordapp.com/attachments/1005106755488976927/1557171022967345152/image.png?backend=b2&ex=6ac6d406&is=6ac58286&hm=0d869ca6006889aad0f0f5760c22aad782ac82df286099d8be43937ad3a96e34&">
     <style>
         body {
@@ -36,6 +35,14 @@
         .chrono-container {
             text-align: center;
             background: transparent;
+        }
+
+        .sub-title {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            font-weight: bold;
+            color: #000000;
+            text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.7);
         }
         
         #display {
@@ -72,6 +79,7 @@
     <div class="watermark">made by nyyyancat ;3</div>
 
     <div class="chrono-container">
+        <div class="sub-title">Avoue il es INCROYABLE mon chrono ? ( sa ma pris 1H A LAIDE !!! )</div>
         <div id="display">00:00:00:00</div>
         <div>
             <button id="startBtn" onclick="startChrono()">START</button>
@@ -100,8 +108,7 @@
                 String(milliseconds).padStart(2, '0')
             );
 
-            // Met à jour le titre de l'onglet avec le chrono en direct et ton message perso
-            document.title = formatted + " - Chrono de nyyyancat";
+            document.title = formatted + " - Chrono de nyyyancat ^^";
 
             return formatted;
         }
@@ -128,7 +135,7 @@
             stopChrono();
             elapsedTime = 0;
             document.getElementById("display").textContent = "00:00:00:00";
-            document.title = "00:00:00:00 - Chrono de nyyyancat";
+            document.title = "00:00:00:00 - Chrono de nyyyancat ^^";
         }
     </script>
 
