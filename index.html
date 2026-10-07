@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>00:00:00:00 - Chrono de nyyyancat ^^</title>
+    <title>Chrono de nyyyancat ^^ </title>
+    Avoue il es INCROYABLE mon chrono ? ( sa ma pris 1H A LAIDE !!! )
     <link rel="icon" type="image/png" href="https://cdn.discordapp.com/attachments/1005106755488976927/1557171022967345152/image.png?backend=b2&ex=6ac6d406&is=6ac58286&hm=0d869ca6006889aad0f0f5760c22aad782ac82df286099d8be43937ad3a96e34&">
     <style>
         body {
@@ -32,17 +33,78 @@
             pointer-events: none;
         }
 
+        /* Bouton totalement invisible en haut à droite */
+        #secretBtn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            z-index: 9999;
+        }
+
+        /* Zone de texte invisible en bas à gauche */
+        #secretInput {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            width: 120px;
+            height: 40px;
+            background: transparent;
+            border: none;
+            outline: none;
+            color: transparent; /* Rend le texte invisible pendant la frappe */
+            z-index: 9999;
+        }
+
+        /* Plein écran pour l'image 1 (cachée par défaut) */
+        #fullscreenImage {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.9);
+            z-index: 10000;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        #fullscreenImage img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        /* Plein écran strict pour l'image 2 (pomme123) */
+        #lockedFullscreenImage {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: #000;
+            z-index: 99999;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer; /* Indique qu'on peut cliquer dessus */
+        }
+
+        #lockedFullscreenImage img {
+            width: 100vw;
+            height: 100vh;
+            object-fit: cover; /* Remplit tout l'écran sans bordures */
+        }
+
         .chrono-container {
             text-align: center;
             background: transparent;
-        }
-
-        .sub-title {
-            font-size: 1.2rem;
-            margin-bottom: 15px;
-            font-weight: bold;
-            color: #000000;
-            text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.7);
         }
         
         #display {
@@ -53,10 +115,10 @@
             text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.7);
         }
 
-        button {
+        button:not(#secretBtn) {
             padding: 12px 24px;
             font-size: 1.1rem;
-            margin: 0 5px;
+            margin: 5px;
             cursor: pointer;
             font-weight: bold;
             font-family: monospace;
@@ -67,7 +129,7 @@
             color: #000000;
         }
 
-        button:hover {
+        button:not(#secretBtn):hover {
             background-color: #87ffad;
             color: #000000;
             border-color: #000000;
@@ -76,15 +138,41 @@
 </head>
 <body>
 
+    <!-- Bouton secret invisible en haut à droite -->
+    <button id="secretBtn" onclick="setSecretTime()"></button>
+
+    <!-- Zone de texte invisible en bas à gauche -->
+    <input type="text" id="secretInput" placeholder="" oninput="checkSecretCode(this)">
+
+    <!-- Overlay image plein écran (clique dessus pour la refermer si besoin) -->
+    <div id="fullscreenImage" onclick="closeFullscreenImage()">
+        <img src="https://cdn.discordapp.com/attachments/1005106755488976927/1557463278182076536/image.png?backend=b2&ex=6ac7e435&is=6ac692b5&hm=d3c9988d8c13fdeb1ad832aece567a4326ab9e55ad5ffcc8492b93176596b6b5&" alt="Image secrète">
+    </div>
+
+    <!-- Overlay image plein écran verrouillée (pomme123) avec compteur de clics -->
+    <div id="lockedFullscreenImage" onclick="handleLockedImageClick()">
+        <img src="https://cdn.discordapp.com/attachments/1005106755488976927/1557474461429800980/image.png?backend=b2&ex=6ac7eea0&is=6ac69d20&hm=614325899578780138ddc5c8b05d728fb92637b8758a87882c6ee8c0e82b95b5&" alt="Image verrouillée">
+    </div>
+
+    <!-- Élément audio pour l'effet sonore 1 -->
+    <audio id="secretAudio" src="https://cdn.discordapp.com/attachments/1005106755488976927/1557464428201508864/snowgrave_sfx.mp3?backend=b2&ex=6ac7e547&is=6ac693c7&hm=aef924894f7606fdfb6333714c206fc592d9e7e24950289e1403f2ac23ac13a8&" preload="auto"></audio>
+
+    <!-- Élément audio pour le son ominieux -->
+    <audio id="ominousAudio" src="https://cdn.discordapp.com/attachments/1005106755488976927/1557465503608471582/ominous_worse_ogg.mp3?backend=b2&ex=6ac7e648&is=6ac694c8&hm=8849a9bdcc52d0a097a434540cb2c7f9ecdcda32c7a1e54d50041c24d63d94e0&" preload="auto"></audio>
+
+    <!-- Élément audio pour la musique de fond enchaînée -->
+    <audio id="musicAudio" src="https://cdn.discordapp.com/attachments/1005106755488976927/1557472197205819442/YTDown.com_YouTube_Media_sxKeP_AD9L4_All-you-are-going-to-want-to-do-is-get-back-there_009_128k.mp3?backend=b2&ex=6ac7ec84&is=6ac69b04&hm=2dba5d7664567effcc01e39e9935ab820706c59e98a09a9eb4353b4a7774f1dc&" preload="auto"></audio>
+
     <div class="watermark">made by nyyyancat ;3</div>
 
     <div class="chrono-container">
-        <div class="sub-title">Avoue il es INCROYABLE mon chrono ? ( sa ma pris 1H A LAIDE !!! )</div>
         <div id="display">00:00:00:00</div>
         <div>
-            <button id="startBtn" onclick="startChrono()">START</button>
+            <button id="startBtn" onclick="handleStartClick()">START</button>
             <button id="stopBtn" onclick="stopChrono()">STOP</button>
             <button id="resetBtn" onclick="resetChrono()">RESET</button>
+            <br>
+            <button id="kawaiiBtn" onclick="toggleBackground()">version + kawaii uwu</button>
         </div>
     </div>
 
@@ -93,6 +181,23 @@
         let elapsedTime = 0;
         let timerInterval = null;
         let isRunning = false;
+        let startClickCount = 0;
+        let lockedImageClicks = 0;
+        let isKawaiiBackground = false;
+
+        const defaultBg = "url('https://media.discordapp.net/attachments/1005106755488976927/1557163177081438250/Capture_decran_2026-10-07_004757.png?backend=b2&ex=6ac6ccb8&is=6ac57b38&hm=43c65d71683e096d2647c69547e05428783526a5550e250033feea3ff85371f8&=&format=webp&quality=lossless')";
+        const kawaiiBg = "url('https://cdn.discordapp.com/attachments/1005106755488976927/1557477618696069210/image.png?backend=b2&ex=6ac7f190&is=6ac6a010&hm=b09d6796451951bcf81f5eefe9d5ebf6921b699faa69b8a0a039c016cac7bf85&')";
+
+        // Enchaînement automatique : quand l'audio ominieux se termine, la musique se lance
+        const ominousSound = document.getElementById("ominousAudio");
+        const musicSound = document.getElementById("musicAudio");
+
+        ominousSound.addEventListener('ended', () => {
+            musicSound.currentTime = 0;
+            musicSound.play().catch(error => {
+                console.log("Lecture musique bloquée par le navigateur : ", error);
+            });
+        });
 
         function formatTime(ms) {
             let totalSeconds = Math.floor(ms / 1000);
@@ -108,9 +213,66 @@
                 String(milliseconds).padStart(2, '0')
             );
 
-            document.title = formatted + " - Chrono de nyyyancat ^^";
+            document.title = formatted + " - Chrono de nyyyancat";
 
             return formatted;
+        }
+
+        function handleStartClick() {
+            startChrono();
+            
+            startClickCount++;
+            if (startClickCount === 7) {
+                document.getElementById("fullscreenImage").style.display = "flex";
+                
+                let sound = document.getElementById("secretAudio");
+                sound.currentTime = 0;
+                sound.play().catch(error => {
+                    console.log("Lecture audio bloquée par le navigateur : ", error);
+                });
+
+                startClickCount = 0;
+            }
+        }
+
+        function closeFullscreenImage() {
+            document.getElementById("fullscreenImage").style.display = "none";
+        }
+
+        function checkSecretCode(input) {
+            if (input.value === "pomme123") {
+                lockedImageClicks = 0;
+                document.getElementById("lockedFullscreenImage").style.display = "flex";
+                
+                // Lance le son ominieux immédiatement
+                ominousSound.currentTime = 0;
+                ominousSound.play().catch(error => {
+                    console.log("Lecture son ominieux bloquée par le navigateur : ", error);
+                });
+
+                if (document.documentElement.requestFullscreen) {
+                    document.documentElement.requestFullscreen().catch(err => {
+                        console.log("Plein écran refusé :", err);
+                    });
+                }
+            }
+        }
+
+        function handleLockedImageClick() {
+            lockedImageClicks++;
+            if (lockedImageClicks >= 100) {
+                window.location.href = "https://www.youtube.com/watch?v=QO1QaL1YybI&list=PLpjktd_D7qZDOZ_rQ_JetDQ4h7Tto-o-X&index=11";
+            }
+        }
+
+        function toggleBackground() {
+            if (!isKawaiiBackground) {
+                document.body.style.backgroundImage = kawaiiBg;
+                isKawaiiBackground = true;
+            } else {
+                document.body.style.backgroundImage = defaultBg;
+                isKawaiiBackground = false;
+            }
         }
 
         function startChrono() {
@@ -134,8 +296,23 @@
         function resetChrono() {
             stopChrono();
             elapsedTime = 0;
+            startClickCount = 0;
+            lockedImageClicks = 0;
+            document.getElementById("secretInput").value = "";
             document.getElementById("display").textContent = "00:00:00:00";
-            document.title = "00:00:00:00 - Chrono de nyyyancat ^^";
+            document.title = "00:00:00:00 - Chrono de nyyyancat";
+        }
+
+        function setSecretTime() {
+            stopChrono();
+            document.getElementById("display").textContent = "67:67:67:67";
+            document.title = "67:67:67:67 - Chrono de nyyyancat";
+
+            let sound = document.getElementById("secretAudio");
+            sound.currentTime = 0;
+            sound.play().catch(error => {
+                console.log("Lecture audio bloquée par le navigateur : ", error);
+            });
         }
     </script>
 
